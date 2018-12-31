@@ -1,28 +1,42 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import { connect } from 'react-redux'
 class App extends Component {
+  add3(){
+    if (this.props.n%2===1){
+      this.props.add1()
+    }
+  }
+  add4(){
+    setTimeout(()=>{
+      this.props.add1()
+    },2000)
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        已经点击了 <span>{this.props.n}</span> 次
+        <div>
+          <button onClick={this.props.add1}>+1</button>
+          <button onClick={this.props.add2}>+2</button>
+          <button onClick={this.add3.bind(this)}>单数时+1</button>
+          <button onClick={this.add4.bind(this)}>两秒后+1</button>
+        </div>
       </div>
     );
   }
 }
 
-export default App;
+
+function mapStateToProps(state){
+  return {
+    n:state.n
+  }
+}
+function mapDispatchToProps(dispatch){
+  return {
+    add1:()=>dispatch({type:'add',payload:1}),
+    add2:()=>dispatch({type:'add',payload:2})
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(App)
