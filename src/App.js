@@ -1,42 +1,33 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
+import Box from './Box.js'
+import Button from './Button.js'
+
+export const themeContext=React.createContext()
+
 class App extends Component {
-  add3(){
-    if (this.props.n%2===1){
-      this.props.add1()
+  constructor(){
+    super()
+    this.state={
+      theme:'green'
     }
   }
-  add4(){
-    setTimeout(()=>{
-      this.props.add1()
-    },2000)
+  changeTheme(){
+    this.setState({
+      theme:this.state.theme==='green'?'red':'green'
+    })
   }
   render() {
     return (
-      <div className="App">
-        已经点击了 <span>{this.props.n}</span> 次
-        <div>
-          <button onClick={this.props.add1}>+1</button>
-          <button onClick={this.props.add2}>+2</button>
-          <button onClick={this.add3.bind(this)}>单数时+1</button>
-          <button onClick={this.add4.bind(this)}>两秒后+1</button>
+      <themeContext.Provider value={this.state.theme}>
+        <div className="App">
+          <button onClick={this.changeTheme.bind(this)}>clickMe</button>
+          <Box>
+            <Button/>
+          </Box>
         </div>
-      </div>
+      </themeContext.Provider>
     );
   }
 }
 
-
-function mapStateToProps(state){
-  return {
-    n:state.n
-  }
-}
-function mapDispatchToProps(dispatch){
-  return {
-    add1:()=>dispatch({type:'add',payload:1}),
-    add2:()=>dispatch({type:'add',payload:2})
-  }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(App)
+export default App
